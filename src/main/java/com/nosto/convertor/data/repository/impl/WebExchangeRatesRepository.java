@@ -13,6 +13,7 @@ import com.nosto.convertor.data.dto.mapper.QuotesJSONDeserializer;
 import com.nosto.convertor.data.dto.mapper.SupportedSymbolsJSONDeserializer;
 import com.nosto.convertor.data.repository.ExchangeRatesRepository;
 import com.nosto.convertor.exception.UnexpectedHttpResponceException;
+import com.nosto.convertor.service.impl.MessageStore;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
@@ -27,7 +28,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import static com.nosto.convertor.util.Constants.*;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
 /**
@@ -59,7 +59,7 @@ public class WebExchangeRatesRepository implements ExchangeRatesRepository {
         SupportedSymbols symbols = builder.create().fromJson(
                 makeSyncHttpsRequest(SUPPORTED_CURRENCIES_URL, API_KEY), SupportedSymbols.class);
         if (!symbols.isSuccess()) {
-            throw new UnexpectedHttpResponceException(FAILED_TO_RETRIEVE_SUPPORTED_SYMBOLS);
+            throw new UnexpectedHttpResponceException(MessageStore.instance().getMessage("FAILED_TO_RETRIEVE_SUPPORTED_SYMBOLS"));
         }
         return Stream.of(symbols.getSymbols())
                 .map(Symbol::getName)
@@ -71,10 +71,10 @@ public class WebExchangeRatesRepository implements ExchangeRatesRepository {
         Quotes quotes = builder.create().fromJson(
                 makeSyncHttpsRequest(QUOTES_URL, API_KEY), Quotes.class);
         if (!quotes.isSuccess()) {
-            throw new UnexpectedHttpResponceException(FAILED_TO_RETRIEVE_QUOTES);
+            throw new UnexpectedHttpResponceException(MessageStore.instance().getMessage("FAILED_TO_RETRIEVE_QUOTES"));
         }
         if (!quotes.getSource().equalsIgnoreCase(REQUIRED_BASE_CURRENCY)) {
-            throw new UnexpectedHttpResponceException(MessageFormat.format(BAD_BASE_CURRENCY, quotes.getSource()));
+            throw new UnexpectedHttpResponceException(MessageFormat.format(MessageStore.instance().getMessage("BAD_BASE_CURRENCY"), quotes.getSource()));
         }
         return Stream.of(quotes.getQuotes())
                 .collect(Collectors.toUnmodifiableMap(Quote::getPairName, Quote::getRate));
@@ -93,7 +93,7 @@ public class WebExchangeRatesRepository implements ExchangeRatesRepository {
                 .build()
                 .send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != HttpStatus.OK.value()) {
-            throw new UnexpectedHttpResponceException(MessageFormat.format(BAD_HTTP_STATUS_CODE, response.statusCode()));
+            throw new UnexpectedHttpResponceException(MessageFormat.format(MessageStore.instance().getMessage("BAD_HTTP_STATUS_CODE"), response.statusCode()));
         }
         return response.body();
     }

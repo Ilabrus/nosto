@@ -7,7 +7,8 @@ package com.nosto.convertor.controller;
 import com.google.gson.Gson;
 import com.nosto.convertor.data.dto.ConversionResult;
 import com.nosto.convertor.service.ConvertorService;
-import com.nosto.convertor.util.ConvertorUtils;
+import com.nosto.convertor.service.impl.ConvertorUtils;
+import com.nosto.convertor.service.impl.MessageStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,6 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.Set;
-import static com.nosto.convertor.util.Constants.*;
 
 /**
  * @Description: Currency convertor REST controller.
@@ -41,19 +41,19 @@ final class ConvertorController {
             Set<String> supportedCurrencies = convertorService.getSupportedCurrencies();
             if (!supportedCurrencies.contains(sourceCurrency)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        MessageFormat.format(UNKNOWN_SOURCE_CURRENCY, sourceCurrency));
+                        MessageFormat.format(MessageStore.instance().getMessage("UNKNOWN_SOURCE_CURRENCY"), sourceCurrency));
             }
             if (!supportedCurrencies.contains(targetCurrency)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        MessageFormat.format(UNKNOWN_TARGET_CURRENCY, targetCurrency));
+                        MessageFormat.format(MessageStore.instance().getMessage("UNKNOWN_TARGET_CURRENCY"), targetCurrency));
             }
             Optional<BigDecimal> decimalValue = ConvertorUtils.parse(value);
             if (decimalValue.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        MessageFormat.format(INCORRECT_DECIMAL_FORMAT, value));
+                        MessageFormat.format(MessageStore.instance().getMessage("INCORRECT_DECIMAL_FORMAT"), value));
             }
             if (decimalValue.get().compareTo(BigDecimal.ZERO) < 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NEGATIVE_SOURCE_VALUE);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, MessageStore.instance().getMessage("NEGATIVE_SOURCE_VALUE"));
             }
             return ResponseEntity.ok(gson.toJson(new ConversionResult(
                     "true",
