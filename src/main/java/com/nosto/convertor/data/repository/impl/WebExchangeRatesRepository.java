@@ -43,7 +43,7 @@ public class WebExchangeRatesRepository implements ExchangeRatesRepository {
 
     private static final String REQUIRED_BASE_CURRENCY = "USD";
 
-    private static final String API_KEY = "OTCOZZsST43J1aWA1tXmoWUeoRaI25P8";
+    private static final String API_KEY = "";
 
     private static final String SUPPORTED_CURRENCIES_URL = "https://api.apilayer.com/currency_data/list";
 
