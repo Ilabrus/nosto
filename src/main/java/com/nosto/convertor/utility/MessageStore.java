@@ -2,7 +2,7 @@
  * Copyright 2022 Ilya A
  * The MIT License (MIT)
  */
-package com.nosto.convertor.service.impl;
+package com.nosto.convertor.utility;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

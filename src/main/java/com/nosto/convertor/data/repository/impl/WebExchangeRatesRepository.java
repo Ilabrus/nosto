@@ -13,7 +13,7 @@ import com.nosto.convertor.data.dto.mapper.QuotesJSONDeserializer;
 import com.nosto.convertor.data.dto.mapper.SupportedSymbolsJSONDeserializer;
 import com.nosto.convertor.data.repository.ExchangeRatesRepository;
 import com.nosto.convertor.exception.UnexpectedHttpResponceException;
-import com.nosto.convertor.service.impl.MessageStore;
+import com.nosto.convertor.utility.MessageStore;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;

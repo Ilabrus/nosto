@@ -3,7 +3,7 @@
  * The MIT License (MIT)
  */
 
-package com.nosto.convertor.service.impl;
+package com.nosto.convertor.utility;
 
 import java.math.BigDecimal;
 import java.util.Optional;
